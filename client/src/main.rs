@@ -1,6 +1,7 @@
 use dioxus::prelude::*;
 use log::LevelFilter;
 
+mod components;
 mod pages;
 
 fn main() {
