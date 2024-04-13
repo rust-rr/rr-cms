@@ -1,7 +1,7 @@
 [application]
 
 # App (Project) Name
-name = "client"
+name = "client_dx"
 
 # Dioxus App Default Platform
 # desktop, web
@@ -11,7 +11,7 @@ default_platform = "web"
 out_dir = "dist"
 
 # resource (assets) file folder
-asset_dir = "public"
+asset_dir = "assets"
 
 [web.app]
 
@@ -24,14 +24,14 @@ title = "RR - CMS"
 reload_html = true
 
 # which files or dirs will be watcher monitoring
-watch_path = ["src", "public"]
+watch_path = ["src", "assets"]
 
 # include `assets` in web platform
 [web.resource]
 
 # CSS style file
 
-style = ["tailwind.css"]
+style = []
 
 # Javascript code file
 script = []
