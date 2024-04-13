@@ -8,9 +8,9 @@ pub struct LayoutProps {
 #[component]
 pub fn Layout(props: LayoutProps) -> Element {
     rsx! {
-        div { class: "layout",
+        div { class: "text-red-600",
             header {
-                h1 { "Layout Header" }
+                h1 { class: "text-blue-500", "Layout Header" }
                 time { "13.4.2024" }
             }
             nav { "this is nav" }
