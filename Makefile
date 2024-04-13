@@ -1,8 +1,8 @@
-ft:
-	cd client/ && dx serve --hot-reload
 tw:
-	cd client/ && npx tailwindcss -i ./input.css -o ./public/tailwind.css --watch
-cl:
-	cd client/ && rm -rf dist
+	cd client_dx/ && npx tailwindcss -i ./input.css -o ./public/tailwind.css --watch
+ftx:
+	cd client_dx/ && dx serve --hot-reload
+fty:
+	cd client_yew/ && trunk serve --open
 bk:
 	cd server/ && cargo run

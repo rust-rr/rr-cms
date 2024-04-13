@@ -1,3 +1,3 @@
 ## RR - CMS
 
-Dioxus, Axum, PostgreSQL
+Dioxus/Yew, Axum, PostgreSQL

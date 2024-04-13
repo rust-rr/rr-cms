@@ -1,0 +1,11 @@
+[serve]
+address = "127.0.0.1"
+port = 8000
+
+[[hooks]]
+stage = "post_build"
+command = "sh"
+command_arguments = [
+    "-c",
+    "npx tailwindcss -i ./input.css -o ./dist/.stage/tailwind.css",
+]
