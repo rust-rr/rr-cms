@@ -1,6 +1,8 @@
-ftx:
+fe_x:
 	cd client_dx/ && dx serve --hot-reload
-fty:
+fe_y:
 	cd client_yew/ && trunk serve --open
-bk:
-	cd server/ && cargo run
+be_dev:
+	cd server/ && make dev
+be_test:
+	cd server/ && make test
