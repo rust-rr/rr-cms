@@ -41,12 +41,18 @@ struct HelloParams {
 }
 // e.g., /hello?name=Richard
 async fn handler_hello(Query(params): Query<HelloParams>) -> impl IntoResponse {
-    println!("->> {:<12} - handler_hello - {:<?}", "HANDLER", params);
+    println!(
+        "->> {:<12} - {:<24} - {:?}",
+        "HANDLER", "handler_hello", params
+    );
     let name = params.name.as_deref().unwrap_or("World!");
     Html(format!("Hello <strong>{name}</strong>"))
 }
 // e.g., /hello/Richard
 async fn handler_hello2(Path(name): Path<String>) -> impl IntoResponse {
-    println!("->> {:<12} - handler_hello2 - {}", "HANDLER", name);
+    println!(
+        "->> {:<12} - {:<24} - {}",
+        "HANDLER", "handler_hello2", name
+    );
     Html(format!("Hello <strong>{name}</strong>"))
 }

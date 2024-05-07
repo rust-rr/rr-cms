@@ -6,7 +6,7 @@ async fn main() -> Result<()> {
     hc.do_get("/hello?name=Richard").await?.print().await?;
 
     hc.do_get("/hello2/Richard").await?.print().await?;
-    
+
     // hc.do_get("/src/main.rs").await?.print().await?;
 
     Ok(())
