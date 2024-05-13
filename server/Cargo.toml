@@ -18,5 +18,5 @@ anyhow = "1"
 httpc-test = "0.1"
 
 [[example]]
-name = "test"
+name = "quick_dev"
 path = "examples/quick_dev.rs"
