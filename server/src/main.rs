@@ -1,6 +1,6 @@
-use self::model::ModelController;
-use self::web::{
-    middleware::mw_res_map,
+use self::{
+    middlewares::{mw_auth, mw_res_map},
+    models::model_tickets,
     routes::{routes_hello, routes_login, routes_static, routes_tickets},
 };
 use axum::{middleware, Router};
@@ -11,17 +11,20 @@ use tower_cookies::CookieManagerLayer;
 pub use self::error::{Error, Result};
 
 mod error;
-mod model;
-mod web;
+mod middlewares;
+mod models;
+mod routes;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let mc = ModelController::new().await?;
+    let mc_tickets = model_tickets::ModelController::new().await?;
+    let routes_tickets = routes_tickets::routes(mc_tickets.clone())
+        .route_layer(middleware::from_fn(mw_auth::mw_require_auth));
 
     let routes_all = Router::new()
         .merge(routes_hello::routes())
         .merge(routes_login::routes())
-        .nest("/api", routes_tickets::routes(mc.clone()))
+        .nest("/api", routes_tickets)
         .layer(middleware::map_response(mw_res_map::mw_response_map))
         .layer(CookieManagerLayer::new())
         .merge(routes_static::routes());

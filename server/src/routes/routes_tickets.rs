@@ -1,5 +1,5 @@
 use crate::{
-    model::{ModelController, Ticket, TicketForCreate},
+    models::model_tickets::{ModelController, Ticket, TicketForCreate},
     Result,
 };
 use axum::{
