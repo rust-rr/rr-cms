@@ -10,6 +10,7 @@ use tower_cookies::CookieManagerLayer;
 
 pub use self::error::{Error, Result};
 
+mod ctx;
 mod error;
 mod middlewares;
 mod models;
