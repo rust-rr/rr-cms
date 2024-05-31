@@ -1,5 +1,6 @@
 #![allow(unused)]
 
+#[derive(Debug, Clone)]
 pub struct Ctx {
     user_id: u64,
 }

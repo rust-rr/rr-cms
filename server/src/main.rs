@@ -27,8 +27,9 @@ async fn main() -> Result<()> {
         .merge(routes_login::routes())
         .nest("/api", routes_tickets)
         .layer(middleware::map_response(mw_res_map::mw_response_map))
+        .layer(middleware::from_fn(mw_auth::mw_ctx_resolver))
         .layer(CookieManagerLayer::new())
-        .merge(routes_static::routes());
+        .fallback_service(routes_static::routes());
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 8080));
     let listener = TcpListener::bind(addr).await.unwrap();

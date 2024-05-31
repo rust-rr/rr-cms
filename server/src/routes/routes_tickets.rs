@@ -1,4 +1,5 @@
 use crate::{
+    ctx::Ctx,
     models::model_tickets::{ModelController, Ticket, TicketForCreate},
     Result,
 };
@@ -17,27 +18,29 @@ pub fn routes(mc: ModelController) -> Router {
 
 async fn create_ticket(
     State(mc): State<ModelController>,
+    ctx: Ctx,
     Json(ticket_fc): Json<TicketForCreate>,
 ) -> Result<Json<Ticket>> {
     println!("->> {:<12} - {:<24}", "HANDLER", "create_ticket");
 
-    let ticket = mc.create_ticket(ticket_fc).await?;
+    let ticket = mc.create_ticket(ctx, ticket_fc).await?;
     Ok(Json(ticket))
 }
 
-async fn list_tickets(State(mc): State<ModelController>) -> Result<Json<Vec<Ticket>>> {
+async fn list_tickets(State(mc): State<ModelController>, ctx: Ctx) -> Result<Json<Vec<Ticket>>> {
     println!("->> {:<12} - {:<24}", "HANDLER", "list_tickets");
 
-    let tickets = mc.list_tickets().await?;
+    let tickets = mc.list_tickets(ctx).await?;
     Ok(Json(tickets))
 }
 
 async fn delete_ticket(
     State(mc): State<ModelController>,
+    ctx: Ctx,
     Path(id): Path<u64>,
 ) -> Result<Json<Ticket>> {
     println!("->> {:<12} - {:<24}", "HANDLER", "delete_ticket");
 
-    let ticket = mc.delete_ticket(id).await?;
+    let ticket = mc.delete_ticket(ctx, id).await?;
     Ok(Json(ticket))
 }

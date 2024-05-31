@@ -6,15 +6,45 @@ use axum::{
     http::{request::Parts, Request},
     middleware::Next,
     response::Response,
-    RequestPartsExt,
 };
 use lazy_regex::regex_captures;
-use tower_cookies::Cookies;
+use tower_cookies::{Cookie, Cookies};
 
 pub async fn mw_require_auth(ctx: Result<Ctx>, req: Request<Body>, next: Next) -> Result<Response> {
-    println!("->> {:<12} - {:<24}", "AUTH", "mw_require_auth");
+    println!(
+        "->> {:<12} - {:<24} - {:?}",
+        "MIDDLEWARE", "mw_require_auth", ctx
+    );
 
     ctx?;
+
+    Ok(next.run(req).await)
+}
+
+pub async fn mw_ctx_resolver(
+    cookies: Cookies,
+    mut req: Request<Body>,
+    next: Next,
+) -> Result<Response> {
+    println!("->> {:<12} - {:<24}", "MIDDLEWARE", "mw_ctx_resolver");
+
+    let auth_token = cookies.get(AUTH_TOKEN).map(|c| c.value().to_string());
+    let result_ctx = match auth_token
+        .ok_or(Error::AuthFailNoAuthTokenCookie)
+        .and_then(parse_token)
+    {
+        Ok((user_id, _exp, _sign)) => {
+            // TODO: Token components validation
+            Ok(Ctx::new(user_id))
+        }
+        Err(e) => Err(e),
+    };
+
+    if result_ctx.is_err() && !matches!(result_ctx, Err(Error::AuthFailNoAuthTokenCookie)) {
+        cookies.remove(Cookie::from(AUTH_TOKEN))
+    }
+
+    req.extensions_mut().insert(result_ctx);
 
     Ok(next.run(req).await)
 }
@@ -26,17 +56,11 @@ impl<S: Send + Sync> FromRequestParts<S> for Ctx {
     async fn from_request_parts(parts: &mut Parts, _state: &S) -> Result<Self> {
         println!("->> {:<12} - {:<24}", "EXTRACTOR", "Ctx");
 
-        let cookies = parts.extract::<Cookies>().await.unwrap();
-
-        let auth_token = cookies.get(AUTH_TOKEN).map(|c| c.value().to_string());
-
-        let (user_id, _exp, _sign) = auth_token
-            .ok_or(Error::AuthFailNoAuthTokenCookie)
-            .and_then(parse_token)?;
-
-        // TODO: Token components validation
-
-        Ok(Ctx::new(user_id))
+        parts
+            .extensions
+            .get::<Result<Ctx>>()
+            .ok_or(Error::AuthFailCtxNotInRequestExt)?
+            .clone()
     }
 }
 
